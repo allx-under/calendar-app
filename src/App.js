@@ -9,6 +9,7 @@ import DaysListItem from "./components/DaysListItem/DaysListItem";
 import months from "./helpers/months";
 import daysInWeek from "./helpers/daysInWeek";
 import DatePickerBtn from "./components/DatePickerBtn/DatePickerBtn";
+import EventForm from "./components/EventForm/EventForm";
 
 function App() {
   const daysNumberByMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -23,9 +24,18 @@ function App() {
   const [startDay, setStartDay] = useState(getStartDayOfMonth(date));
 
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showNewEventForm, setShowNewEventForm] = useState(false);
 
   const onClickToggleDatePicker = () => {
     setShowDatePicker(!showDatePicker);
+  };
+
+  const onClickShowForm = () => {
+    setShowNewEventForm(true);
+  };
+
+  const onClickCloseModal = () => {
+    setShowNewEventForm(false);
   };
 
   useEffect(() => {
@@ -49,24 +59,30 @@ function App() {
 
   return (
     <Container>
-      <AddEventButton />
-      <WrapperFilter>
-        <DateFilter
-          month={months[month]}
-          year={year}
-          prevMonth={() => setDate(new Date(year, month - 1, day))}
-          nextMonth={() => setDate(new Date(year, month + 1, day))}
+      <HeaderStyled>
+        <AddEventButton onClick={onClickShowForm} />
+        <EventForm
+          isOpenModal={showNewEventForm}
+          closeModal={onClickCloseModal}
         />
-        <DatePickerBtn onClickToggle={onClickToggleDatePicker} />
-        {showDatePicker && (
-          <DatePicker
-            setDate={(selectedYear, selectedMonth) => {
-              setDate(new Date(selectedYear, selectedMonth));
-              onClickToggleDatePicker();
-            }}
+        <WrapperFilter>
+          <DateFilter
+            month={months[month]}
+            year={year}
+            prevMonth={() => setDate(new Date(year, month - 1, day))}
+            nextMonth={() => setDate(new Date(year, month + 1, day))}
           />
-        )}
-      </WrapperFilter>
+          <DatePickerBtn onClickToggle={onClickToggleDatePicker} />
+          {showDatePicker && (
+            <DatePicker
+              setDate={(selectedYear, selectedMonth) => {
+                setDate(new Date(selectedYear, selectedMonth));
+                onClickToggleDatePicker();
+              }}
+            />
+          )}
+        </WrapperFilter>
+      </HeaderStyled>
 
       <DaysList>
         {daysInWeek.map((item, index) => (
@@ -103,4 +119,9 @@ const WrapperFilter = styled.div`
 
 const Container = styled.div`
   margin: 0 15px;
+`;
+
+const HeaderStyled = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;

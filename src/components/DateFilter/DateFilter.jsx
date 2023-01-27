@@ -6,13 +6,13 @@ const DateFilter = ({ year, month, prevMonth, nextMonth }) => {
   return (
     <Container>
       <StyledBtn onClick={prevMonth}>
-        <img src={backIcon} width="20px" alt="" srcset="" />
+        <img src={backIcon} width="20px" height="20px" alt="" srcset="" />
       </StyledBtn>
       <StyledContent>
         {month} {year}
       </StyledContent>
       <StyledBtn onClick={nextMonth}>
-        <img src={nextIcon} width="20px" alt="" srcset="" />
+        <img src={nextIcon} width="20px" height="20px" alt="" srcset="" />
       </StyledBtn>
     </Container>
   );
@@ -36,10 +36,11 @@ const StyledBtn = styled.button`
   align-items: center;
   justify-content: center;
   border: none;
-  background: transparent;
+  border-radius: 50%;
   cursor: pointer;
+  transition: transform 250ms linear, background-color 250ms linear;
   &:hover {
-    color: black;
-    background-color: white;
+    transform: scale(1.1);
+    background-color: #d9d9d9;
   }
 `;

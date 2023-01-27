@@ -40,7 +40,7 @@ export default DatePicker;
 
 const Container = styled.div`
   position: absolute;
-  top: 40px;
+  top: 50px;
   right: 10px;
   padding: 5px 5px;
   width: 300px;

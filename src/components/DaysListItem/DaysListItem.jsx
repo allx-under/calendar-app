@@ -13,9 +13,12 @@ const StyledItem = styled.li`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  border-right: 0.5px solid #d9d9d9;
+  border-bottom: 0.5px solid #d9d9d9;
+
   ${({ isToday }) =>
     isToday &&
     `
       background: #B4F8C8;
-    `}
+    `};
 `;

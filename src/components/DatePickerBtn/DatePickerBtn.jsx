@@ -15,7 +15,8 @@ const StyledBtn = styled.button`
   border: none;
   background: transparent;
   cursor: pointer;
+  transition: transform 250ms linear;
   &:hover {
-    fill: gray;
+    transform: scale(1.1);
   }
 `;
