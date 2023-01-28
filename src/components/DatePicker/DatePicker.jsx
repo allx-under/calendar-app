@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import years from "../../helpers/years";
@@ -36,11 +37,15 @@ const DatePicker = ({ setDate }) => {
   );
 };
 
+DatePicker.propTypes = {
+  setDate: PropTypes.func,
+};
+
 export default DatePicker;
 
 const Container = styled.div`
   position: absolute;
-  top: 50px;
+  top: 40px;
   right: 10px;
   padding: 5px 5px;
   width: 300px;
@@ -52,6 +57,7 @@ const Container = styled.div`
   border: 1px solid #a1a1a1;
   background: rgb(117,117,117);
 background: linear-gradient(107deg, rgba(117,117,117,0.8239889705882353) 37%, rgba(103,103,103,1) 82%);
+z-index:2;
 `;
 
 const StyledBtn = styled.button`

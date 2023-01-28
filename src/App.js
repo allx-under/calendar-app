@@ -19,12 +19,24 @@ function App() {
 
   const [date, setDate] = useState(now);
   const [day, setDay] = useState(date.getDate());
-  const [month, setMonth] = useState(date.getMonth());
-  const [year, setYear] = useState(date.getFullYear());
-  const [startDay, setStartDay] = useState(getStartDayOfMonth(date));
+  const [month, setMonth] = useState(
+    JSON.parse(localStorage.getItem("month")) || date.getMonth()
+  );
+  const [year, setYear] = useState(
+    JSON.parse(localStorage.getItem("year")) || date.getFullYear()
+  );
+  const [startDay, setStartDay] = useState(
+    JSON.parse(localStorage.getItem("startDay")) || getStartDayOfMonth(date)
+  );
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showNewEventForm, setShowNewEventForm] = useState(false);
+  const [openFormToUpdate, setOpenFormToUpdate] = useState(false);
+  const [dataToUpdate, setDataToUpdate] = useState({});
+
+  const [events, setEvents] = useState(
+    JSON.parse(localStorage.getItem("events")) || []
+  );
 
   const onClickToggleDatePicker = () => {
     setShowDatePicker(!showDatePicker);
@@ -38,12 +50,39 @@ function App() {
     setShowNewEventForm(false);
   };
 
+  const onEventClickToUpdate = (info) => {
+    setOpenFormToUpdate(true);
+    setShowNewEventForm(true);
+    setDataToUpdate({ ...info });
+  };
+
+  useEffect(() => {
+    localStorage.setItem("events", JSON.stringify(events));
+    localStorage.setItem("month", JSON.stringify(month));
+    localStorage.setItem("year", JSON.stringify(year));
+    localStorage.setItem("startDay", JSON.stringify(startDay));
+  }, [year, month, events, startDay]);
+
   useEffect(() => {
     setDay(date.getDate());
     setMonth(date.getMonth());
     setYear(date.getFullYear());
     setStartDay(getStartDayOfMonth(date));
   }, [date]);
+
+  useEffect(() => {
+    const monthStorage = JSON.parse(localStorage.getItem("month"));
+    const yearStorage = JSON.parse(localStorage.getItem("year"));
+    const startDayStorage = JSON.parse(localStorage.getItem("startDay"));
+
+    if (monthStorage) {
+      setMonth(monthStorage);
+      setStartDay(startDayStorage);
+    }
+    if (yearStorage) {
+      setYear(yearStorage);
+    }
+  }, []);
 
   function getStartDayOfMonth(date) {
     const startDate = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
@@ -63,7 +102,12 @@ function App() {
         <AddEventButton onClick={onClickShowForm} />
         <EventForm
           isOpenModal={showNewEventForm}
+          openToUpdate={openFormToUpdate}
           closeModal={onClickCloseModal}
+          setEvents={setEvents}
+          setOpenToUpdate={setOpenFormToUpdate}
+          updatedData={dataToUpdate}
+          setDataToUpdate={setDataToUpdate}
         />
         <WrapperFilter>
           <DateFilter
@@ -92,6 +136,11 @@ function App() {
           .fill(null)
           .map((_, index) => {
             const dayNum = index - (startDay - 2);
+            const correctMonth = month + 1;
+            const dateToRender = `${year}-${
+              correctMonth < 10 ? "0" + correctMonth : correctMonth
+            }-${dayNum < 10 ? "0" + dayNum : dayNum}`;
+            const eventToRender = events.find((e) => e.date === dateToRender);
             return (
               <DaysListItem
                 key={index}
@@ -101,6 +150,8 @@ function App() {
                   year === now.getFullYear()
                 }
                 content={dayNum > 0 ? dayNum : ""}
+                event={eventToRender}
+                onClick={() => onEventClickToUpdate(eventToRender)}
               />
             );
           })}
